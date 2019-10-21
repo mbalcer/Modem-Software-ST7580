@@ -2,24 +2,23 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <top>
       <HBox prefHeight="50.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <ChoiceBox fx:id="choosePort" prefHeight="30.0" prefWidth="300.0">
+            <ComboBox fx:id="choosePort" prefHeight="30.0" prefWidth="275.0">
                <HBox.margin>
                   <Insets left="50.0" top="10.0" />
                </HBox.margin>
-            </ChoiceBox>
-            <Button mnemonicParsing="false" onAction="#connect" prefHeight="30.0" prefWidth="75.0" text="CONNECT">
+            </ComboBox>
+            <Button mnemonicParsing="false" onAction="#connect" prefHeight="30.0" prefWidth="100.0" text="CONNECT">
                <HBox.margin>
                   <Insets left="40.0" top="10.0" />
                </HBox.margin>
