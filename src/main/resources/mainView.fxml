@@ -15,7 +15,7 @@
    <top>
       <HBox prefHeight="50.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="choosePort" prefHeight="30.0" prefWidth="200.0" promptText="Port">
+            <ComboBox fx:id="choosePort" onAction="#changeConnectedPort" prefHeight="30.0" prefWidth="200.0" promptText="Port">
                <HBox.margin>
                   <Insets left="50.0" top="10.0" />
                </HBox.margin>
