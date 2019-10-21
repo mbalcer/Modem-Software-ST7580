@@ -23,6 +23,8 @@ public class MainController {
     @FXML
     private TextArea receivedText;
 
+    private SerialPort connectedPort;
+
     public void initialize() {
         SerialPort[] ports = SerialPort.getCommPorts();
         fillComboBox(ports);
@@ -37,9 +39,9 @@ public class MainController {
 
     public void connect() {
         String port = choosePort.getValue();
-        SerialPort comPort = SerialPort.getCommPort(port);
-        comPort.openPort();
-        comPort.addDataListener(new SerialPortDataListener() {
+        connectedPort = SerialPort.getCommPort(port);
+        connectedPort.openPort();
+        connectedPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
             @Override
@@ -58,8 +60,12 @@ public class MainController {
     }
 
     public void reset() {
+        String resetCode = "02003C3C00";
+        connectedPort.writeBytes(resetCode.getBytes(), resetCode.getBytes().length);
     }
 
     public void send() {
+        String message = textToSend.getText();
+        connectedPort.writeBytes(message.getBytes(), message.getBytes().length);
     }
 }
