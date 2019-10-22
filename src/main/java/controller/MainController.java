@@ -77,8 +77,8 @@ public class MainController {
     }
 
     public void reset() {
-        String resetCode = "02003C3C00";
-        connectedPort.writeBytes(resetCode.getBytes(), resetCode.getBytes().length);
+        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
+        connectedPort.writeBytes(resetCode, resetCode.length);
     }
 
     public void send() {
