@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -20,12 +22,24 @@
                   <Insets left="50.0" top="10.0" />
                </HBox.margin>
             </ComboBox>
-            <Button mnemonicParsing="false" onAction="#connect" prefHeight="30.0" prefWidth="125.0" text="CONNECT">
+            <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refreshPort" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/reload.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnConnect" mnemonicParsing="false" onAction="#connect" prefHeight="30.0" prefWidth="125.0" text="CONNECT">
                <HBox.margin>
                   <Insets left="40.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#disconnect" prefHeight="30.0" prefWidth="125.0" text="DISCONNECT">
+            <Button fx:id="btnDisconnect" mnemonicParsing="false" onAction="#disconnect" prefHeight="30.0" prefWidth="125.0" text="DISCONNECT">
                <HBox.margin>
                   <Insets left="10.0" right="50.0" top="10.0" />
                </HBox.margin>
@@ -40,14 +54,15 @@
       <AnchorPane prefHeight="303.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="textToSend" layoutX="50.0" layoutY="101.0" prefHeight="30.0" prefWidth="400.0" promptText="The text to send" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="100.0" />
-            <TextArea fx:id="receivedText" layoutX="50.0" layoutY="94.0" prefHeight="150.0" prefWidth="450.0" promptText="This is received data" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-            <Button layoutX="490.0" layoutY="50.0" mnemonicParsing="false" onAction="#send" prefHeight="30.0" prefWidth="60.0" text="SEND" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="100.0" />
-            <Button layoutX="417.0" layoutY="55.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="125.0" text="RESET MODEM" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
+            <TextArea fx:id="receivedText" layoutX="50.0" layoutY="94.0" prefHeight="130.0" prefWidth="500.0" promptText="This is received data" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+            <Button fx:id="btnSend" layoutX="490.0" layoutY="50.0" mnemonicParsing="false" onAction="#send" prefHeight="30.0" prefWidth="60.0" text="SEND" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="100.0" />
+            <Button fx:id="btnResetModem" layoutX="417.0" layoutY="55.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="125.0" text="RESET MODEM" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
             <Label fx:id="info" layoutX="50.0" layoutY="62.0" prefHeight="30.0" prefWidth="350.0" text="Information" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
+            <Button fx:id="btnClear" layoutX="506.0" layoutY="293.0" mnemonicParsing="false" onAction="#clear" prefHeight="30.0" text="CLEAR" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="50.0" />
          </children>
       </AnchorPane>
    </center>
