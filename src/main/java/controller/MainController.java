@@ -76,6 +76,15 @@ public class MainController {
 
     public void reset() {
         final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
+        sendText(resetCode);
+    }
+
+    public void send() {
+        String message = textToSend.getText();
+        sendText(message.getBytes());
+    }
+
+    public void sendText(byte[] bytes) {
         connectedPort.setDTR();
         connectedPort.setRTS();
         try {
@@ -83,7 +92,7 @@ public class MainController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        connectedPort.writeBytes(resetCode, resetCode.length);
+        connectedPort.writeBytes(bytes, bytes.length);
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
@@ -91,11 +100,6 @@ public class MainController {
         }
         connectedPort.clearDTR();
         connectedPort.clearRTS();
-    }
-
-    public void send() {
-        String message = textToSend.getText();
-        connectedPort.writeBytes(message.getBytes(), message.getBytes().length);
     }
 
     public void disconnect() {
