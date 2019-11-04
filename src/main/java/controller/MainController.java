@@ -6,10 +6,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 
 import java.util.Arrays;
@@ -18,6 +15,24 @@ public class MainController {
 
     @FXML
     private ComboBox<String> choosePort;
+
+    @FXML
+    private Button btnRefresh;
+
+    @FXML
+    private Button btnConnect;
+
+    @FXML
+    private Button btnDisconnect;
+
+    @FXML
+    private Button btnSend;
+
+    @FXML
+    private Button btnResetModem;
+
+    @FXML
+    private Button btnClear;
 
     @FXML
     private TextField textToSend;
@@ -33,6 +48,7 @@ public class MainController {
     public void initialize() {
         SerialPort[] ports = SerialPort.getCommPorts();
         fillComboBox(ports);
+        disableButtons(true);
     }
 
     private void fillComboBox(SerialPort[] ports) {
@@ -42,6 +58,7 @@ public class MainController {
         choosePort.setItems(namePorts);
     }
 
+    @FXML
     public void connect() {
         connectedPort.openPort();
         connectedPort.setBaudRate(57600);
@@ -63,22 +80,13 @@ public class MainController {
         checkOpenPort(connectedPort);
     }
 
-    private void checkOpenPort(SerialPort port) {
-        if (port.isOpen()) {
-            info.setText("You are connected to the port " +port.getSystemPortName());
-            info.setTextFill(Paint.valueOf("GREEN"));
-        }
-        else {
-            info.setText("Unable to connect to port " + port.getSystemPortName());
-            info.setTextFill(Paint.valueOf("RED"));
-        }
-    }
-
+    @FXML
     public void reset() {
         final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
         sendText(resetCode);
     }
 
+    @FXML
     public void send() {
         String message = textToSend.getText();
         sendText(message.getBytes());
@@ -102,14 +110,28 @@ public class MainController {
         connectedPort.clearRTS();
     }
 
+    @FXML
     public void disconnect() {
         connectedPort.removeDataListener();
         connectedPort.closePort();
         checkClosePort(connectedPort);
     }
 
+    @FXML
     public void changeConnectedPort() {
         connectedPort = getPortFromCheckbox();
+    }
+
+    private void checkOpenPort(SerialPort port) {
+        if (port.isOpen()) {
+            info.setText("You are connected to the port " +port.getSystemPortName());
+            info.setTextFill(Paint.valueOf("GREEN"));
+            disableButtons(false);
+        }
+        else {
+            info.setText("Unable to connect to port " + port.getSystemPortName());
+            info.setTextFill(Paint.valueOf("RED"));
+        }
     }
 
     private void checkClosePort(SerialPort port) {
@@ -120,10 +142,32 @@ public class MainController {
         else {
             info.setText("Disconnected from the port " + port.getSystemPortName());
             info.setTextFill(Paint.valueOf("GREEN"));
+            disableButtons(true);
         }
     }
 
     private SerialPort getPortFromCheckbox() {
         return SerialPort.getCommPort(choosePort.getValue());
+    }
+
+    @FXML
+    public void disableButtons(boolean bool) {
+        btnRefresh.setDisable(!bool);
+        btnConnect.setDisable(!bool);
+        choosePort.setDisable(!bool);
+
+        btnDisconnect.setDisable(bool);
+        btnResetModem.setDisable(bool);
+        btnSend.setDisable(bool);
+    }
+
+    @FXML
+    public void refreshPort() {
+
+    }
+
+    @FXML
+    public void clear() {
+
     }
 }
