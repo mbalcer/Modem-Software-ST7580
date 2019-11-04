@@ -53,12 +53,10 @@ public class MainController {
             {
                 byte[] getData = event.getReceivedData();
 
-                StringBuilder message = new StringBuilder();
-
                 for (byte data : getData) {
-                    message.append((char) data);
+                    receivedText.setText(receivedText.getText() + String.format("%02x", data) + " ");
                 }
-                receivedText.setText(receivedText.getText() +  message + "\n");
+                receivedText.setText(receivedText.getText() + "\n");
             }
         });
 
@@ -78,7 +76,21 @@ public class MainController {
 
     public void reset() {
         final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
+        connectedPort.setDTR();
+        connectedPort.setRTS();
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         connectedPort.writeBytes(resetCode, resetCode.length);
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        connectedPort.clearDTR();
+        connectedPort.clearRTS();
     }
 
     public void send() {
