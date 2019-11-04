@@ -46,12 +46,12 @@ public class MainController {
     private SerialPort connectedPort;
 
     public void initialize() {
-        SerialPort[] ports = SerialPort.getCommPorts();
-        fillComboBox(ports);
+        fillComboBox();
         disableButtons(true);
     }
 
-    private void fillComboBox(SerialPort[] ports) {
+    private void fillComboBox() {
+        SerialPort[] ports = SerialPort.getCommPorts();
         ObservableList<String> namePorts = FXCollections.observableArrayList();
         Arrays.stream(ports)
                 .forEach(p -> namePorts.add(p.getSystemPortName()));
@@ -163,11 +163,12 @@ public class MainController {
 
     @FXML
     public void refreshPort() {
-
+        fillComboBox();
     }
 
     @FXML
     public void clear() {
-
+        textToSend.clear();
+        receivedText.clear();
     }
 }
