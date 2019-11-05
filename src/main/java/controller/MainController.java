@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
+import model.DisplayData;
 import model.PortCOM;
 
 import java.util.Arrays;
@@ -14,6 +15,24 @@ public class MainController {
 
     @FXML
     private ComboBox<String> choosePort;
+
+    @FXML
+    private ComboBox<Integer> cbBaudRate;
+
+    @FXML
+    private ComboBox<Integer> cbDataBits;
+
+    @FXML
+    private ComboBox<Integer> cbStopBits;
+
+    @FXML
+    private ComboBox<Integer> cbPartity;
+
+    @FXML
+    private RadioButton rbReceiveASCII;
+
+    @FXML
+    private RadioButton rbReceiveHEX;
 
     @FXML
     private Button btnRefresh;
@@ -43,8 +62,13 @@ public class MainController {
     private Label info;
 
     private PortCOM connectedPort;
+    private ToggleGroup groupDisplayReceivedData;
 
     public void initialize() {
+        groupDisplayReceivedData = new ToggleGroup();
+        rbReceiveASCII.setToggleGroup(groupDisplayReceivedData);
+        rbReceiveHEX.setToggleGroup(groupDisplayReceivedData);
+        rbReceiveHEX.setSelected(true);
         fillComboBox();
         disableButtons(true);
     }
@@ -130,5 +154,23 @@ public class MainController {
     public void clear() {
         textToSend.clear();
         receivedText.clear();
+    }
+
+    @FXML
+    public void setReceiveInAscii() {
+        connectedPort.setDisplayReceivedData(DisplayData.ASCII);
+        resetReceiveData();
+    }
+
+    @FXML
+    public void setReceiveInHex() {
+        connectedPort.setDisplayReceivedData(DisplayData.HEX);
+        resetReceiveData();
+    }
+
+    private void resetReceiveData() {
+        receivedText.clear();
+        connectedPort.closeListener();
+        connectedPort.activeListener();
     }
 }

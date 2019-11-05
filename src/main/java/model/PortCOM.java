@@ -13,15 +13,17 @@ public class PortCOM {
     private SerialPort port;
     private Frame frame;
     private TextArea receivedText;
+    private DisplayData displayReceivedData;
 
     public PortCOM(SerialPort port, TextArea receivedText) {
         this.port = port;
         this.port.setBaudRate(57600);
+        this.displayReceivedData = DisplayData.HEX;
         this.frame = new Frame();
         this.receivedText = receivedText;
     }
 
-    private void activeListener() {
+    public void activeListener() {
         this.port.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
@@ -44,7 +46,13 @@ public class PortCOM {
 
                 if (frame.isCorrectFrame()) {
                     Arrays.stream(frame.getData())
-                            .forEach(data -> receivedText.setText(receivedText.getText() + String.format("%02x", data) + " "));
+                            .forEach(data -> {
+                                     if (displayReceivedData == DisplayData.HEX) {
+                                         receivedText.setText(receivedText.getText() + String.format("%02x", data) + " ");
+                                     } else {
+                                         receivedText.setText(receivedText.getText() + (char)data.byteValue() + " ");
+                                     }
+                            });
 
                     receivedText.setText(receivedText.getText() + "\n");
                 }
@@ -52,7 +60,7 @@ public class PortCOM {
         });
     }
 
-    private void closeListener() {
+    public void closeListener() {
         this.port.removeDataListener();
     }
 
@@ -98,5 +106,9 @@ public class PortCOM {
 
     public void setReceivedText(TextArea receivedText) {
         this.receivedText = receivedText;
+    }
+
+    public void setDisplayReceivedData(DisplayData displayReceivedData) {
+        this.displayReceivedData = displayReceivedData;
     }
 }
