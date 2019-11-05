@@ -111,4 +111,11 @@ public class PortCOM {
     public void setDisplayReceivedData(DisplayData displayReceivedData) {
         this.displayReceivedData = displayReceivedData;
     }
+
+    public void setParam(Integer baudRate, Integer dataBits, Integer stopBits, Integer parity) {
+        port.setBaudRate(baudRate);
+        port.setNumDataBits(dataBits);
+        port.setNumStopBits(stopBits);
+        port.setParity(parity);
+    }
 }

@@ -75,6 +75,7 @@ public class MainController {
         fillComboBoxDataBits();
         fillComboBoxStopBits();
         fillComboBoxParity();
+        setDefaultParam();
         disableButtons(true);
     }
 
@@ -108,6 +109,7 @@ public class MainController {
     @FXML
     public void connect() {
         connectedPort = new PortCOM(getPortFromCheckbox(), receivedText);
+        connectedPort.setParam(cbBaudRate.getValue(), cbDataBits.getValue(), cbStopBits.getValue(), cbParity.getValue().ordinal());
         connectedPort.open();
         checkOpenPort(connectedPort);
     }
@@ -200,5 +202,12 @@ public class MainController {
         receivedText.clear();
         connectedPort.closeListener();
         connectedPort.activeListener();
+    }
+
+    private void setDefaultParam() {
+        cbBaudRate.setValue(57600);
+        cbDataBits.setValue(8);
+        cbStopBits.setValue(1);
+        cbParity.setValue(Parity.NONE);
     }
 }
