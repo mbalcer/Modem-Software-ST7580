@@ -8,7 +8,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
+import model.Frame;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 public class MainController {
@@ -44,6 +47,7 @@ public class MainController {
     private Label info;
 
     private SerialPort connectedPort;
+    private Frame frame;
 
     public void initialize() {
         fillComboBox();
@@ -62,18 +66,33 @@ public class MainController {
     public void connect() {
         connectedPort.openPort();
         connectedPort.setBaudRate(57600);
+        frame = new Frame();
         connectedPort.addDataListener(new SerialPortDataListener() {
             @Override
-            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
+            public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
             @Override
             public void serialEvent(SerialPortEvent event)
             {
-                byte[] getData = event.getReceivedData();
+                byte[] getByte = new byte[1];
+                InputStream in = connectedPort.getInputStream();
 
-                for (byte data : getData) {
-                    receivedText.setText(receivedText.getText() + String.format("%02x", data) + " ");
+
+                while(connectedPort.bytesAvailable() > 0) {
+                    try {
+                        in.read(getByte, 0, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    frame.processFrame(getByte[0]);
                 }
-                receivedText.setText(receivedText.getText() + "\n");
+
+                if (frame.isCorrectFrame()) {
+                    Arrays.stream(frame.getData())
+                            .forEach(data -> receivedText.setText(receivedText.getText() + String.format("%02x", data) + " "));
+
+                    receivedText.setText(receivedText.getText() + "\n");
+                }
             }
         });
 

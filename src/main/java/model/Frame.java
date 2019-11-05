@@ -10,10 +10,12 @@ public class Frame {
     private Byte[] data;
     private Byte[] checkSum;
     private Integer counterData;
+    private Boolean correctFrame;
 
     public Frame() {
         frameStatus = FrameStatus.BEGIN;
         checkSum = new Byte[2];
+        correctFrame = false;
     }
 
     public void processFrame(Byte receivedByte) {
@@ -22,6 +24,7 @@ public class Frame {
                 if (receivedByte == STX || receivedByte == STX_2) {
                     frameStatus = FrameStatus.LEN;
                     counterData = 0;
+                    correctFrame = false;
                 }
             break;
             case LEN:
@@ -47,7 +50,16 @@ public class Frame {
             case SECOND_FCS:
                 checkSum[1] = receivedByte;
                 frameStatus = FrameStatus.BEGIN;
+                correctFrame = true;
             break;
         }
+    }
+
+    public Boolean isCorrectFrame() {
+        return correctFrame;
+    }
+
+    public Byte[] getData() {
+        return data;
     }
 }
