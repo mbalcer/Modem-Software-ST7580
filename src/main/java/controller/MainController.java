@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import model.DisplayData;
+import model.Parity;
 import model.PortCOM;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class MainController {
     private ComboBox<Integer> cbStopBits;
 
     @FXML
-    private ComboBox<Integer> cbPartity;
+    private ComboBox<Parity> cbParity;
 
     @FXML
     private RadioButton rbReceiveASCII;
@@ -69,16 +70,39 @@ public class MainController {
         rbReceiveASCII.setToggleGroup(groupDisplayReceivedData);
         rbReceiveHEX.setToggleGroup(groupDisplayReceivedData);
         rbReceiveHEX.setSelected(true);
-        fillComboBox();
+        fillComboBoxPorts();
+        fillComboBoxBaudRate();
+        fillComboBoxDataBits();
+        fillComboBoxStopBits();
+        fillComboBoxParity();
         disableButtons(true);
     }
 
-    private void fillComboBox() {
+    private void fillComboBoxPorts() {
         SerialPort[] ports = SerialPort.getCommPorts();
         ObservableList<String> namePorts = FXCollections.observableArrayList();
         Arrays.stream(ports)
                 .forEach(p -> namePorts.add(p.getSystemPortName()));
         choosePort.setItems(namePorts);
+    }
+
+    private void fillComboBoxBaudRate() {
+        Integer[] baudRates = {600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 56000, 57600, 115200, 12800, 256000};
+        cbBaudRate.setItems(FXCollections.observableArrayList(baudRates));
+    }
+
+    private void fillComboBoxDataBits() {
+        Integer[] dataBits = {5, 6, 7, 8};
+        cbDataBits.setItems(FXCollections.observableArrayList(dataBits));
+    }
+
+    private void fillComboBoxStopBits() {
+        Integer[] stopBits = {1, 2};
+        cbStopBits.setItems(FXCollections.observableArrayList(stopBits));
+    }
+
+    private void fillComboBoxParity() {
+        cbParity.setItems(FXCollections.observableArrayList(Parity.values()));
     }
 
     @FXML
@@ -139,6 +163,10 @@ public class MainController {
         btnRefresh.setDisable(!bool);
         btnConnect.setDisable(!bool);
         choosePort.setDisable(!bool);
+        cbBaudRate.setDisable(!bool);
+        cbDataBits.setDisable(!bool);
+        cbStopBits.setDisable(!bool);
+        cbParity.setDisable(!bool);
 
         btnDisconnect.setDisable(bool);
         btnResetModem.setDisable(bool);
@@ -147,7 +175,7 @@ public class MainController {
 
     @FXML
     public void refreshPort() {
-        fillComboBox();
+        fillComboBoxPorts();
     }
 
     @FXML
