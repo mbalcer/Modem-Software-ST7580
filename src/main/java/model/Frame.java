@@ -40,8 +40,9 @@ public class Frame {
                 if (counterData < len) {
                     data[counterData] = receivedByte;
                     counterData++;
-                } else
-                    frameStatus = FrameStatus.FIRST_FCS;
+                    if (counterData == len)
+                        frameStatus = FrameStatus.FIRST_FCS;
+                }
             break;
             case FIRST_FCS:
                 checkSum[0] = receivedByte;
@@ -49,8 +50,8 @@ public class Frame {
             break;
             case SECOND_FCS:
                 checkSum[1] = receivedByte;
+                checkCorrectFrame();
                 frameStatus = FrameStatus.BEGIN;
-                correctFrame = true;
             break;
         }
     }
@@ -61,5 +62,17 @@ public class Frame {
 
     public Byte[] getData() {
         return data;
+    }
+
+    public void checkCorrectFrame() {
+        Integer lenFrame = len + 2;
+        Integer lenFromCheckSum = checkSum[0].intValue() + checkSum[1].intValue();
+
+        if (lenFrame == lenFromCheckSum)
+            correctFrame = true;
+        else {
+            correctFrame = false;
+            System.out.println("Niepoprawna suma kontrolna " + lenFrame + " " + lenFromCheckSum);
+        }
     }
 }
