@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class PortCOM {
+    private final Byte ACK = 0x06;
+
     private SerialPort port;
     private Frame frame;
     private TextArea receivedText;
@@ -43,6 +45,9 @@ public class PortCOM {
                 }
 
                 if (frame.isCorrectFrame()) {
+                    if (frame.isSendAck())
+                        send(new byte[]{ACK});
+
                     frame.getFrame().stream()
                             .forEach(data -> {
                                      if (displayReceivedData == DisplayData.HEX) {

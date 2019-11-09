@@ -16,6 +16,7 @@ public class Frame {
     private Byte[] checkSum;
     private Integer counterData;
     private Boolean correctFrame;
+    private Boolean sendAck;
 
     public Frame() {
         frameStatus = FrameStatus.BEGIN;
@@ -32,6 +33,10 @@ public class Frame {
                     counterData = 0;
                     correctFrame = false;
                     begin = receivedByte;
+                    if (receivedByte == STX)
+                        sendAck = true;
+                    else
+                        sendAck = false;
                 }
             break;
             case LEN:
@@ -65,6 +70,10 @@ public class Frame {
 
     public Boolean isCorrectFrame() {
         return correctFrame;
+    }
+
+    public Boolean isSendAck() {
+        return sendAck;
     }
 
     public List<Byte> getFrame() {
