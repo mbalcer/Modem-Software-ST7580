@@ -7,7 +7,6 @@ import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class PortCOM {
     private SerialPort port;
@@ -17,7 +16,6 @@ public class PortCOM {
 
     public PortCOM(SerialPort port, TextArea receivedText) {
         this.port = port;
-        this.port.setBaudRate(57600);
         this.displayReceivedData = DisplayData.HEX;
         this.frame = new Frame();
         this.receivedText = receivedText;
@@ -45,7 +43,7 @@ public class PortCOM {
                 }
 
                 if (frame.isCorrectFrame()) {
-                    Arrays.stream(frame.getData())
+                    frame.getFrame().stream()
                             .forEach(data -> {
                                      if (displayReceivedData == DisplayData.HEX) {
                                          receivedText.setText(receivedText.getText() + String.format("%02x", data) + " ");

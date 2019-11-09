@@ -1,10 +1,15 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Frame {
     private final Byte STX = 0x02;
     private final Byte STX_2 = 0x03;
 
     private FrameStatus frameStatus;
+    private Byte begin;
     private Integer len;
     private Byte commandCode;
     private Byte[] data;
@@ -19,12 +24,14 @@ public class Frame {
     }
 
     public void processFrame(Byte receivedByte) {
+        System.out.println(frameStatus.toString() + " " + receivedByte);
         switch (frameStatus) {
             case BEGIN:
                 if (receivedByte == STX || receivedByte == STX_2) {
                     frameStatus = FrameStatus.LEN;
                     counterData = 0;
                     correctFrame = false;
+                    begin = receivedByte;
                 }
             break;
             case LEN:
@@ -60,8 +67,15 @@ public class Frame {
         return correctFrame;
     }
 
-    public Byte[] getData() {
-        return data;
+    public List<Byte> getFrame() {
+        List<Byte> frame = new ArrayList<>();
+        frame.add(begin);
+        frame.add(len.byteValue());
+        frame.add(commandCode);
+        frame.addAll(Arrays.asList(data));
+        frame.addAll(Arrays.asList(checkSum));
+
+        return frame;
     }
 
     public void checkCorrectFrame() {
