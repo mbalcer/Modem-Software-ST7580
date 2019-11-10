@@ -25,7 +25,7 @@ public class Frame {
     }
 
     public void processFrame(Byte receivedByte) {
-        System.out.println(frameStatus.toString() + " " + receivedByte);
+        System.out.println(frameStatus.toString() + " " + String.format("0x%02x", receivedByte));
         switch (frameStatus) {
             case BEGIN:
                 if (receivedByte == STX || receivedByte == STX_2) {
@@ -46,7 +46,10 @@ public class Frame {
             break;
             case COMMAND:
                 commandCode = receivedByte;
-                frameStatus = FrameStatus.DATA;
+                if (len == 0)
+                    frameStatus = FrameStatus.FIRST_FCS;
+                else
+                    frameStatus = FrameStatus.DATA;
             break;
             case DATA:
                 if (counterData < len) {
@@ -88,7 +91,10 @@ public class Frame {
     }
 
     public void checkCorrectFrame() {
-        Integer lenFrame = len + 2;
+        Integer lenFrame = len + commandCode.intValue();
+        for (Byte d:data) {
+            lenFrame += d.intValue();
+        }
         Integer lenFromCheckSum = checkSum[0].intValue() + checkSum[1].intValue();
 
         if (lenFrame == lenFromCheckSum)
