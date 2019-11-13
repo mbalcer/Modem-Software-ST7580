@@ -28,10 +28,9 @@ public class Frame {
         System.out.println(frameStatus.toString() + " " + String.format("0x%02x", receivedByte));
         switch (frameStatus) {
             case BEGIN:
+                clearFrame();
                 if (receivedByte == STX || receivedByte == STX_2) {
                     frameStatus = FrameStatus.LEN;
-                    counterData = 0;
-                    correctFrame = false;
                     begin = receivedByte;
                     if (receivedByte == STX)
                         sendAck = true;
@@ -103,5 +102,9 @@ public class Frame {
             correctFrame = false;
             System.out.println("Niepoprawna suma kontrolna " + lenFrame + " " + lenFromCheckSum);
         }
+    }
+    public void clearFrame() {
+        counterData = 0;
+        correctFrame = false;
     }
 }

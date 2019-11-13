@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 public class PortCOM {
     private final Byte ACK = 0x06;
+    private final Byte NACK = 0x15;
 
     private SerialPort port;
     private Frame frame;
@@ -45,8 +46,10 @@ public class PortCOM {
                 }
 
                 if (frame.isCorrectFrame()) {
-                    if (frame.isSendAck())
-                        send(new byte[]{ACK});
+                    if (frame.isSendAck()) {
+                        port.writeBytes(new byte[]{ACK}, 1);
+                        System.out.println("Wysłano ACK ");
+                    }
 
                     frame.getFrame().stream()
                             .forEach(data -> {
@@ -78,21 +81,22 @@ public class PortCOM {
     }
 
     public void send(byte[] bytes) {
-        this.port.setDTR();
         this.port.setRTS();
+        this.port.setDTR();
+        System.out.println("Reset");
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.port.writeBytes(bytes, bytes.length);
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        this.port.clearDTR();
+//        try {
+//            Thread.sleep(10);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         this.port.clearRTS();
+        this.port.clearDTR();
     }
 
     public SerialPort getPort() {
