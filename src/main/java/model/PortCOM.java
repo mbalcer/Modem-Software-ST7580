@@ -54,13 +54,13 @@ public class PortCOM {
                     frame.getFrame().stream()
                             .forEach(data -> {
                                      if (displayReceivedData == DisplayData.HEX) {
-                                         receivedText.setText(receivedText.getText() + String.format("0x%02x", data) + " ");
+                                         appendTextToTextField(String.format("0x%02x", data) + " ");
                                      } else {
-                                         receivedText.setText(receivedText.getText() + (char)data.byteValue());
+                                         appendTextToTextField(String.valueOf((char)data.byteValue()));
                                      }
                             });
 
-                    receivedText.setText(receivedText.getText() + "\n");
+                    appendTextToTextField("\n");
                 }
             }
         });
@@ -90,29 +90,16 @@ public class PortCOM {
             e.printStackTrace();
         }
         this.port.writeBytes(bytes, bytes.length);
-//        try {
-//            Thread.sleep(10);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         this.port.clearRTS();
         this.port.clearDTR();
     }
 
+    private void appendTextToTextField(String text) {
+        javafx.application.Platform.runLater(() -> receivedText.appendText(text));
+    }
+
     public SerialPort getPort() {
         return port;
-    }
-
-    public void setPort(SerialPort port) {
-        this.port = port;
-    }
-
-    public TextArea getReceivedText() {
-        return receivedText;
-    }
-
-    public void setReceivedText(TextArea receivedText) {
-        this.receivedText = receivedText;
     }
 
     public void setDisplayReceivedData(DisplayData displayReceivedData) {
