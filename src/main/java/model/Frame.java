@@ -24,6 +24,28 @@ public class Frame {
         correctFrame = false;
     }
 
+    public Frame(Byte len, Byte cc, Byte... data) {
+        this();
+        this.begin = STX;
+        this.len = len.intValue();
+        this.commandCode = cc;
+        this.data = data;
+
+        Integer fcs = len + cc.intValue();
+
+        for (Byte d:data) {
+            fcs += d.intValue();
+        }
+
+        if (fcs > 0xff) {
+            checkSum[0] = Byte.valueOf((byte) 0xFF);
+            checkSum[1] = Byte.valueOf((byte) (fcs.byteValue() - 0xff));
+        } else {
+            checkSum[0] = Byte.valueOf(Byte.valueOf(fcs.byteValue()));
+            checkSum[1] = Byte.valueOf(Byte.valueOf((byte) 0x00));
+        }
+    }
+
     public void processFrame(Byte receivedByte) {
         System.out.println(frameStatus.toString() + " " + String.format("0x%02x", receivedByte));
         switch (frameStatus) {
