@@ -111,6 +111,15 @@ public class Frame {
         return frame;
     }
 
+    public byte[] getBytes() {
+        List<Byte> frame = getFrame();
+        byte[] bytes = new byte[frame.size()];
+        for(int i=0; i<frame.size(); i++)
+            bytes[i] = frame.get(i).byteValue();
+
+        return bytes;
+    }
+
     public void checkCorrectFrame() {
         Integer lenFrame = len + commandCode.intValue();
         for (Byte d:data) {

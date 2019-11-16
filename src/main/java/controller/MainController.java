@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import model.DisplayData;
+import model.Frame;
 import model.Parity;
 import model.PortCOM;
 
@@ -116,8 +117,9 @@ public class MainController {
 
     @FXML
     public void reset() {
-        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
-        connectedPort.send(resetCode);
+//        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
+        Frame resetFrame = new Frame(Byte.valueOf((byte) 0x00), Byte.valueOf((byte) 0x3C));
+        connectedPort.send(resetFrame.getBytes());
     }
 
     @FXML
