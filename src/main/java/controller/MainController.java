@@ -268,10 +268,18 @@ public class MainController {
 
     @FXML
     public void setPhy() {
+        Frame phyFrame = new Frame(Byte.valueOf((byte) 0x08), Byte.valueOf((byte) 0x00), Byte.valueOf((byte) 0x10));
+        connectedPort.send(phyFrame.getBytes());
+        info.setText("Changed mode on PHY");
+        info.setTextFill(Paint.valueOf("GREEN"));
     }
 
     @FXML
     public void setDl() {
+        Frame dlFrame = new Frame(Byte.valueOf((byte) 0x08), Byte.valueOf((byte) 0x00), Byte.valueOf((byte) 0x11));
+        connectedPort.send(dlFrame.getBytes());
+        info.setText("Changed mode on DL");
+        info.setTextFill(Paint.valueOf("GREEN"));
     }
 
 }
