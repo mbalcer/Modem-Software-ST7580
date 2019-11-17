@@ -24,14 +24,17 @@ public class Frame {
         correctFrame = false;
     }
 
-    public Frame(Byte len, Byte cc, Byte... data) {
+    public Frame(byte cc, byte... data) {
         this();
         this.begin = STX;
-        this.len = len.intValue();
+        this.len = data.length;
         this.commandCode = cc;
-        this.data = data;
+        this.data = new Byte[data.length];
+        for (int i = 0; i < data.length; i++) {
+            this.data[i] = data[i];
+        }
 
-        Integer fcs = len + cc.intValue();
+        Integer fcs = this.len + this.commandCode.intValue();
 
         for (Byte d:data) {
             fcs += d.intValue();
