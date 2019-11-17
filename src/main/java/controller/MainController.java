@@ -150,6 +150,7 @@ public class MainController {
 //        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
         Frame resetFrame = new Frame(Byte.valueOf((byte) 0x00), Byte.valueOf((byte) 0x3C));
         connectedPort.send(resetFrame.getBytes());
+        System.out.println("Reset...");
     }
 
     @FXML
@@ -157,10 +158,19 @@ public class MainController {
         String message = textToSend.getText();
         if (sendData == DisplayData.ASCII) {
             connectedPort.send(message.getBytes());
+            info.setText("You have successfully sent the text in ASCII");
+            info.setTextFill(Paint.valueOf("GREEN"));
         } else if (sendData == DisplayData.HEX) {
             message = message.replaceAll("\\s+","");
-            byte[] bytes = DatatypeConverter.parseHexBinary(message);
-            connectedPort.send(bytes);
+            try {
+                byte[] bytes = DatatypeConverter.parseHexBinary(message);
+                connectedPort.send(bytes);
+                info.setText("You have successfully sent the text in HEX");
+                info.setTextFill(Paint.valueOf("GREEN"));
+            } catch (IllegalArgumentException e) {
+                info.setText("You are trying to send incorrect char in HEX");
+                info.setTextFill(Paint.valueOf("RED"));
+            }
         }
     }
 

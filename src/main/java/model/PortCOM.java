@@ -83,7 +83,6 @@ public class PortCOM {
     public void send(byte[] bytes) {
         this.port.setRTS();
         this.port.setDTR();
-        System.out.println("Reset");
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
