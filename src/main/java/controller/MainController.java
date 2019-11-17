@@ -11,6 +11,7 @@ import model.Frame;
 import model.Parity;
 import model.PortCOM;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
 
 public class MainController {
@@ -35,6 +36,18 @@ public class MainController {
 
     @FXML
     private RadioButton rbReceiveHEX;
+
+    @FXML
+    private RadioButton rbSendASCII;
+
+    @FXML
+    private RadioButton rbSendHEX;
+
+    @FXML
+    private RadioButton rbPhy;
+
+    @FXML
+    private RadioButton rbDl;
 
     @FXML
     private Button btnRefresh;
@@ -65,12 +78,15 @@ public class MainController {
 
     private PortCOM connectedPort;
     private ToggleGroup groupDisplayReceivedData;
+    private ToggleGroup groupSendData;
+    private ToggleGroup groupMode;
+    private DisplayData sendData;
 
     public void initialize() {
-        groupDisplayReceivedData = new ToggleGroup();
-        rbReceiveASCII.setToggleGroup(groupDisplayReceivedData);
-        rbReceiveHEX.setToggleGroup(groupDisplayReceivedData);
-        rbReceiveHEX.setSelected(true);
+        initToggleGroup(groupDisplayReceivedData, rbReceiveHEX, rbReceiveASCII);
+        initToggleGroup(groupSendData, rbSendASCII, rbSendHEX);
+        initToggleGroup(groupMode, rbDl, rbPhy);
+        sendData = DisplayData.ASCII;
         fillComboBoxPorts();
         fillComboBoxBaudRate();
         fillComboBoxDataBits();
@@ -78,6 +94,13 @@ public class MainController {
         fillComboBoxParity();
         setDefaultParam();
         disableButtons(true);
+    }
+
+    private void initToggleGroup(ToggleGroup group, RadioButton first, RadioButton second) {
+        group = new ToggleGroup();
+        first.setToggleGroup(group);
+        second.setToggleGroup(group);
+        first.setSelected(true);
     }
 
     private void fillComboBoxPorts() {
@@ -107,6 +130,13 @@ public class MainController {
         cbParity.setItems(FXCollections.observableArrayList(Parity.values()));
     }
 
+    private void setDefaultParam() {
+        cbBaudRate.setValue(57600);
+        cbDataBits.setValue(8);
+        cbStopBits.setValue(1);
+        cbParity.setValue(Parity.NONE);
+    }
+
     @FXML
     public void connect() {
         connectedPort = new PortCOM(getPortFromCheckbox(), receivedText);
@@ -125,7 +155,13 @@ public class MainController {
     @FXML
     public void send() {
         String message = textToSend.getText();
-        connectedPort.send(message.getBytes());
+        if (sendData == DisplayData.ASCII) {
+            connectedPort.send(message.getBytes());
+        } else if (sendData == DisplayData.HEX) {
+            message = message.replaceAll("\\s+","");
+            byte[] bytes = DatatypeConverter.parseHexBinary(message);
+            connectedPort.send(bytes);
+        }
     }
 
     @FXML
@@ -175,6 +211,10 @@ public class MainController {
         btnDisconnect.setDisable(bool);
         btnResetModem.setDisable(bool);
         btnSend.setDisable(bool);
+        rbReceiveHEX.setDisable(bool);
+        rbReceiveASCII.setDisable(bool);
+        rbSendASCII.setDisable(bool);
+        rbSendHEX.setDisable(bool);
     }
 
     @FXML
@@ -200,16 +240,28 @@ public class MainController {
         resetReceiveData();
     }
 
+    @FXML
+    public void setSendASCII() {
+        sendData = DisplayData.ASCII;
+    }
+
+    @FXML
+    public void setSendHEX() {
+        sendData = DisplayData.HEX;
+    }
+
     private void resetReceiveData() {
         receivedText.clear();
         connectedPort.closeListener();
         connectedPort.activeListener();
     }
 
-    private void setDefaultParam() {
-        cbBaudRate.setValue(57600);
-        cbDataBits.setValue(8);
-        cbStopBits.setValue(1);
-        cbParity.setValue(Parity.NONE);
+    @FXML
+    public void setPhy() {
     }
+
+    @FXML
+    public void setDl() {
+    }
+
 }
