@@ -1,15 +1,14 @@
 package controller;
 
 import com.fazecast.jSerialComm.SerialPort;
+import frame.Frame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
-import model.DisplayData;
-import model.Frame;
-import model.Parity;
-import model.PortCOM;
+import port.DisplayData;
+import port.PortCOM;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;

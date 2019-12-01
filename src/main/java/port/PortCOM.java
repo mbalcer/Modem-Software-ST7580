@@ -1,8 +1,9 @@
-package model;
+package port;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import frame.Frame;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
