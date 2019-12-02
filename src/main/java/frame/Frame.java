@@ -12,6 +12,7 @@ public class Frame {
     private Byte begin;
     private Integer len;
     private Byte commandCode;
+    private Byte status;
     private Byte[] data;
     private Byte[] checkSum;
     private Integer counterData;
@@ -61,6 +62,9 @@ public class Frame {
                         sendAck = true;
                     else
                         sendAck = false;
+                } else if(receivedByte == 0x3F) {
+                    frameStatus = FrameStatus.STATUS;
+                    begin = receivedByte;
                 }
             break;
             case LEN:
@@ -90,6 +94,10 @@ public class Frame {
             case SECOND_FCS:
                 checkSum[1] = receivedByte;
                 checkCorrectFrame();
+                frameStatus = FrameStatus.BEGIN;
+            break;
+            case STATUS:
+                status = receivedByte;
                 frameStatus = FrameStatus.BEGIN;
             break;
         }
@@ -140,5 +148,10 @@ public class Frame {
     public void clearFrame() {
         counterData = 0;
         correctFrame = false;
+        status = null;
+    }
+
+    public Byte getStatus() {
+        return status;
     }
 }

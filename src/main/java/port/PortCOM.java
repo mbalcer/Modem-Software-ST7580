@@ -53,13 +53,13 @@ public class PortCOM {
                     }
 
                     frame.getFrame().stream()
-                            .forEach(data -> {
-                                     if (displayReceivedData == DisplayData.HEX) {
-                                         appendTextToTextField(String.format("0x%02x", data) + " ");
-                                     } else {
-                                         appendTextToTextField(String.valueOf((char)data.byteValue()));
-                                     }
-                            });
+                            .forEach(data -> displayData(data));
+
+                    appendTextToTextField("\n");
+                }
+                else if(frame.getStatus()!=null) {
+                    displayData((byte) 0x3F);
+                    displayData(frame.getStatus());
 
                     appendTextToTextField("\n");
                 }
@@ -96,6 +96,14 @@ public class PortCOM {
 
     private void appendTextToTextField(String text) {
         javafx.application.Platform.runLater(() -> receivedText.appendText(text));
+    }
+
+    private void displayData(Byte data) {
+        if (displayReceivedData == DisplayData.HEX) {
+            appendTextToTextField(String.format("0x%02x", data) + " ");
+        } else {
+            appendTextToTextField(String.valueOf((char)data.byteValue()));
+        }
     }
 
     public SerialPort getPort() {
