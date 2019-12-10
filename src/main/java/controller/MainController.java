@@ -150,6 +150,7 @@ public class MainController {
         Frame resetFrame = new Frame((byte) 0x3C);
         connectedPort.send(resetFrame.getBytes());
         System.out.println("Reset...");
+        rbDl.setSelected(true);
     }
 
     @FXML
@@ -224,6 +225,8 @@ public class MainController {
         rbReceiveASCII.setDisable(bool);
         rbSendASCII.setDisable(bool);
         rbSendHEX.setDisable(bool);
+        rbDl.setDisable(bool);
+        rbPhy.setDisable(bool);
     }
 
     @FXML
