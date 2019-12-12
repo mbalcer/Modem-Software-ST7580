@@ -6,9 +6,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <top>
-      <AnchorPane prefHeight="200.0" prefWidth="600.0" style="-fx-border-width: 0 0 1px 0; -fx-border-color: black;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="250.0" prefWidth="600.0" style="-fx-border-width: 0 0 1px 0; -fx-border-color: black;" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
@@ -55,14 +55,19 @@
             <RadioButton fx:id="rbPhy" layoutX="130.0" layoutY="151.0" mnemonicParsing="false" onAction="#setPhy" text="PHY" />
             <RadioButton fx:id="rbDl" layoutX="205.0" layoutY="151.0" mnemonicParsing="false" onAction="#setDl" text="DL" />
             <Label layoutX="66.0" layoutY="151.0" text="Mode:" />
+            <Label layoutX="400.0" layoutY="151.0" text="Modulation:" />
+            <RadioButton fx:id="rbBPSK" layoutX="329.0" layoutY="175.0" mnemonicParsing="false" onAction="#setBPSK" text="BPSK" />
+            <RadioButton fx:id="rbQPSK" layoutX="406.0" layoutY="175.0" mnemonicParsing="false" onAction="#setQPSK" text="QPSK" />
+            <RadioButton fx:id="rb8PSK" layoutX="489.0" layoutY="175.0" mnemonicParsing="false" onAction="#set8PSK" text="8PSK" />
+            <CheckBox fx:id="cbModulationCoded" layoutX="403.0" layoutY="211.0" mnemonicParsing="false" onAction="#setModulationCoded" text="Coded" />
          </children>
       </AnchorPane>
    </top>
    <center>
       <AnchorPane prefHeight="350.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="textToSend" layoutX="50.0" layoutY="93.0" prefHeight="30.0" prefWidth="350.0" promptText="The text to send" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="93.0" />
-            <TextArea fx:id="receivedText" layoutX="50.0" layoutY="94.0" prefHeight="130.0" prefWidth="500.0" promptText="This is received data" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+            <TextField fx:id="textToSend" layoutX="50.0" layoutY="93.0" prefHeight="30.0" prefWidth="350.0" promptText="The text to send" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="93.0" />
+            <TextArea fx:id="receivedText" layoutX="50.0" layoutY="94.0" prefHeight="130.0" prefWidth="500.0" promptText="This is received data" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="150.0" />
             <Button fx:id="btnSend" layoutX="495.0" layoutY="93.0" mnemonicParsing="false" onAction="#send" prefHeight="30.0" prefWidth="60.0" text="SEND" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="93.0" />
             <Button fx:id="btnResetModem" layoutX="427.0" layoutY="35.0" mnemonicParsing="false" onAction="#reset" prefHeight="30.0" prefWidth="125.0" text="RESET MODEM" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="35.0" />
             <Label fx:id="info" layoutX="50.0" layoutY="35.0" prefHeight="30.0" prefWidth="350.0" text="Information" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="35.0">
@@ -73,8 +78,8 @@
             <Button fx:id="btnClear" layoutX="506.0" layoutY="293.0" mnemonicParsing="false" onAction="#clear" prefHeight="30.0" text="CLEAR" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="50.0" />
             <RadioButton fx:id="rbReceiveASCII" layoutX="50.0" layoutY="295.0" mnemonicParsing="false" onAction="#setReceiveInAscii" text="ASCII" AnchorPane.bottomAnchor="37.00000000000002" />
             <RadioButton fx:id="rbReceiveHEX" layoutX="121.0" layoutY="295.0" mnemonicParsing="false" onAction="#setReceiveInHex" text="HEX" AnchorPane.bottomAnchor="37.00000000000002" />
-            <RadioButton fx:id="rbSendASCII" layoutX="421.0" layoutY="84.0" mnemonicParsing="false" onAction="#setSendASCII" text="ASCII" />
-            <RadioButton fx:id="rbSendHEX" layoutX="421.0" layoutY="114.0" mnemonicParsing="false" onAction="#setSendHEX" text="HEX" />
+            <RadioButton fx:id="rbSendASCII" layoutX="421.0" layoutY="84.0" mnemonicParsing="false" onAction="#setSendASCII" text="ASCII" AnchorPane.rightAnchor="130.0" />
+            <RadioButton fx:id="rbSendHEX" layoutX="420.0" layoutY="114.0" mnemonicParsing="false" onAction="#setSendHEX" text="HEX" AnchorPane.rightAnchor="136.0" />
          </children>
       </AnchorPane>
    </center>
