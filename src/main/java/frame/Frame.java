@@ -18,6 +18,7 @@ public class Frame {
     private Integer counterData;
     private Boolean correctFrame;
     private Boolean sendAck;
+    private Byte receiveAck;
 
     public Frame() {
         frameStatus = FrameStatus.BEGIN;
@@ -65,6 +66,8 @@ public class Frame {
                 } else if(receivedByte == 0x3F) {
                     frameStatus = FrameStatus.STATUS;
                     begin = receivedByte;
+                } else if (receivedByte == 0x06 || receivedByte == 0x15) {
+                    receiveAck = receivedByte;
                 }
             break;
             case LEN:
@@ -153,5 +156,9 @@ public class Frame {
 
     public Byte getStatus() {
         return status;
+    }
+
+    public Byte getReceiveAck() {
+        return receiveAck;
     }
 }
