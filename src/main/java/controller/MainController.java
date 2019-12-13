@@ -49,6 +49,18 @@ public class MainController {
     private RadioButton rbDl;
 
     @FXML
+    private RadioButton rbQPSK;
+
+    @FXML
+    private RadioButton rbBPSK;
+
+    @FXML
+    private RadioButton rb8PSK;
+
+    @FXML
+    private CheckBox cbModulationCoded;
+
+    @FXML
     private Button btnRefresh;
 
     @FXML
@@ -79,12 +91,14 @@ public class MainController {
     private ToggleGroup groupDisplayReceivedData;
     private ToggleGroup groupSendData;
     private ToggleGroup groupMode;
+    private ToggleGroup groupModulation;
     private DisplayData sendData;
 
     public void initialize() {
         initToggleGroup(groupDisplayReceivedData, rbReceiveHEX, rbReceiveASCII);
         initToggleGroup(groupSendData, rbSendASCII, rbSendHEX);
         initToggleGroup(groupMode, rbDl, rbPhy);
+        initToggleGroup(groupModulation, rbQPSK, rbBPSK, rb8PSK);
         sendData = DisplayData.ASCII;
         fillComboBoxPorts();
         fillComboBoxBaudRate();
@@ -95,11 +109,11 @@ public class MainController {
         disableButtons(true);
     }
 
-    private void initToggleGroup(ToggleGroup group, RadioButton first, RadioButton second) {
+    private void initToggleGroup(ToggleGroup group, RadioButton... radioButtons) {
         group = new ToggleGroup();
-        first.setToggleGroup(group);
-        second.setToggleGroup(group);
-        first.setSelected(true);
+        for (RadioButton r : radioButtons)
+            r.setToggleGroup(group);
+        radioButtons[0].setSelected(true);
     }
 
     private void fillComboBoxPorts() {
@@ -284,4 +298,15 @@ public class MainController {
         info.setTextFill(Paint.valueOf("GREEN"));
     }
 
+    public void setBPSK() {
+    }
+
+    public void setQPSK() {
+    }
+
+    public void set8PSK() {
+    }
+
+    public void setModulationCoded() {
+    }
 }
