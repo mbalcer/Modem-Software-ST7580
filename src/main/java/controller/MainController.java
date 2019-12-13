@@ -93,13 +93,15 @@ public class MainController {
     private ToggleGroup groupMode;
     private ToggleGroup groupModulation;
     private DisplayData sendData;
+    private Modulation modulation;
 
     public void initialize() {
         initToggleGroup(groupDisplayReceivedData, rbReceiveHEX, rbReceiveASCII);
         initToggleGroup(groupSendData, rbSendASCII, rbSendHEX);
         initToggleGroup(groupMode, rbDl, rbPhy);
-        initToggleGroup(groupModulation, rbQPSK, rbBPSK, rb8PSK);
+        initToggleGroup(groupModulation, rbBPSK, rbQPSK, rb8PSK);
         sendData = DisplayData.ASCII;
+        modulation = Modulation.BPSK;
         fillComboBoxPorts();
         fillComboBoxBaudRate();
         fillComboBoxDataBits();
@@ -298,15 +300,41 @@ public class MainController {
         info.setTextFill(Paint.valueOf("GREEN"));
     }
 
+    @FXML
     public void setBPSK() {
+        modulation = Modulation.BPSK;
+        cbModulationCoded.setDisable(false);
+        setModulation();
     }
 
+    @FXML
     public void setQPSK() {
+        modulation = Modulation.QPSK;
+        cbModulationCoded.setDisable(false);
+        setModulation();
     }
 
+    @FXML
     public void set8PSK() {
+        modulation = Modulation.PSK8;
+        cbModulationCoded.setDisable(true);
+        setModulation();
     }
 
+    @FXML
     public void setModulationCoded() {
+        rb8PSK.setDisable(cbModulationCoded.isSelected());
+        setModulation();
+    }
+
+    private void setModulation() {
+        int modulationValue = modulation.ordinal();
+        int fec = cbModulationCoded.isSelected() ? 1 : 0;
+        int modeValue = rbPhy.isSelected() ? 0x24 : 0x50;
+
+        int b = 4 + (fec << 6) + (modulationValue << 4);
+
+        Frame modulationFrame = new Frame((byte) modeValue, (byte) b);
+        connectedPort.send(modulationFrame.getBytes());
     }
 }
