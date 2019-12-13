@@ -44,27 +44,27 @@ public class PortCOM {
                     }
 
                     frame.processFrame(getByte[0]);
-                }
 
-                if (frame.isCorrectFrame()) {
-                    if (frame.isSendAck()) {
-                        port.writeBytes(new byte[]{ACK}, 1);
-                        System.out.println("Wysłano ACK ");
+                    if (frame.isCorrectFrame()) {
+                        if (frame.isSendAck()) {
+                            port.writeBytes(new byte[]{ACK}, 1);
+                            System.out.println("Wysłano ACK ");
+                        }
+
+                        frame.getFrame().stream()
+                                .forEach(data -> displayData(data));
+
+                        appendTextToTextField("\n");
                     }
+                    else if(frame.getStatus()!=null) {
+                        displayData((byte) 0x3F);
+                        displayData(frame.getStatus());
 
-                    frame.getFrame().stream()
-                            .forEach(data -> displayData(data));
-
-                    appendTextToTextField("\n");
-                }
-                else if(frame.getStatus()!=null) {
-                    displayData((byte) 0x3F);
-                    displayData(frame.getStatus());
-
-                    appendTextToTextField("\n");
-                } else if (frame.getReceiveAck()!=null) {
-                    displayData(frame.getReceiveAck());
-                    appendTextToTextField("\n");
+                        appendTextToTextField("\n");
+                    } else if (frame.getReceiveAck()!=null) {
+                        displayData(frame.getReceiveAck());
+                        appendTextToTextField("\n");
+                    }
                 }
             }
         });
