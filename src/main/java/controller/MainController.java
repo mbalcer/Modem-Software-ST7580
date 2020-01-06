@@ -94,6 +94,7 @@ public class MainController {
     private ToggleGroup groupModulation;
     private DisplayData sendData;
     private Modulation modulation;
+    private int byteModulation;
 
     public void initialize() {
         initToggleGroup(groupDisplayReceivedData, rbReceiveHEX, rbReceiveASCII);
@@ -102,6 +103,7 @@ public class MainController {
         initToggleGroup(groupModulation, rbBPSK, rbQPSK, rb8PSK);
         sendData = DisplayData.ASCII;
         modulation = Modulation.BPSK;
+        byteModulation = 4;
         fillComboBoxPorts();
         fillComboBoxBaudRate();
         fillComboBoxDataBits();
@@ -173,14 +175,14 @@ public class MainController {
     public void send() {
         String message = textToSend.getText();
         if (sendData == DisplayData.ASCII) {
-            connectedPort.send(message.getBytes());
+            connectedPort.send(makeFrameBeforeSend(message.getBytes()));
             info.setText("You have successfully sent the text in ASCII");
             info.setTextFill(Paint.valueOf("GREEN"));
         } else if (sendData == DisplayData.HEX) {
             message = message.replaceAll("\\s+","");
             try {
                 byte[] bytes = DatatypeConverter.parseHexBinary(message);
-                connectedPort.send(bytes);
+                connectedPort.send(makeFrameBeforeSend(bytes));
                 info.setText("You have successfully sent the text in HEX");
                 info.setTextFill(Paint.valueOf("GREEN"));
             } catch (IllegalArgumentException e) {
@@ -330,11 +332,21 @@ public class MainController {
     private void setModulation() {
         int modulationValue = modulation.ordinal();
         int fec = cbModulationCoded.isSelected() ? 1 : 0;
+
+        byteModulation = 4 + (fec << 6) + (modulationValue << 4);
+    }
+
+    private byte[] makeFrameBeforeSend(byte[] data) {
         int modeValue = rbPhy.isSelected() ? 0x24 : 0x50;
 
-        int b = 4 + (fec << 6) + (modulationValue << 4);
+        int[] dataInt = new int[data.length + 1];
+        dataInt[0] = byteModulation;
+        for (int i = 1; i < dataInt.length; i++) {
+            dataInt[i] = data[i-1] & 0xff;
+        }
 
-        Frame modulationFrame = new Frame(modeValue, b);
-        connectedPort.send(modulationFrame.getBytes());
+        Frame frame = new Frame(modeValue, dataInt);
+        return frame.getBytes();
     }
+
 }
