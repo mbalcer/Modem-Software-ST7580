@@ -163,7 +163,7 @@ public class MainController {
     @FXML
     public void reset() {
 //        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
-        Frame resetFrame = new Frame((byte) 0x3C);
+        Frame resetFrame = new Frame(0x3C);
         connectedPort.send(resetFrame.getBytes());
         System.out.println("Reset...");
         rbDl.setSelected(true);
@@ -286,7 +286,7 @@ public class MainController {
 
     @FXML
     public void setPhy() {
-        Frame phyFrame = new Frame((byte) 0x08, (byte) 0x00, (byte) 0x10);
+        Frame phyFrame = new Frame(0x08, 0x00, 0x10);
         connectedPort.send(phyFrame.getBytes());
         info.setText("Changed mode on PHY");
         info.setTextFill(Paint.valueOf("GREEN"));
@@ -294,7 +294,7 @@ public class MainController {
 
     @FXML
     public void setDl() {
-        Frame dlFrame = new Frame((byte) 0x08, (byte) 0x00, (byte) 0x11);
+        Frame dlFrame = new Frame(0x08, 0x00, 0x11);
         connectedPort.send(dlFrame.getBytes());
         info.setText("Changed mode on DL");
         info.setTextFill(Paint.valueOf("GREEN"));
@@ -334,7 +334,7 @@ public class MainController {
 
         int b = 4 + (fec << 6) + (modulationValue << 4);
 
-        Frame modulationFrame = new Frame((byte) modeValue, (byte) b);
+        Frame modulationFrame = new Frame(modeValue, b);
         connectedPort.send(modulationFrame.getBytes());
     }
 }

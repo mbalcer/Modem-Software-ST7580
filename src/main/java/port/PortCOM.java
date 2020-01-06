@@ -43,7 +43,7 @@ public class PortCOM {
                         e.printStackTrace();
                     }
 
-                    frame.processFrame(getByte[0]);
+                    frame.processFrame((int)getByte[0]);
 
                     if (frame.isCorrectFrame()) {
                         if (frame.isSendAck()) {
@@ -57,7 +57,7 @@ public class PortCOM {
                         appendTextToTextField("\n");
                     }
                     else if(frame.getStatus()!=null) {
-                        displayData((byte) 0x3F);
+                        displayData(0x3F);
                         displayData(frame.getStatus());
 
                         appendTextToTextField("\n");
@@ -101,11 +101,11 @@ public class PortCOM {
         javafx.application.Platform.runLater(() -> receivedText.appendText(text));
     }
 
-    private void displayData(Byte data) {
+    private void displayData(Integer data) {
         if (displayReceivedData == DisplayData.HEX) {
             appendTextToTextField(String.format("0x%02x", data) + " ");
         } else {
-            appendTextToTextField(String.valueOf((char)data.byteValue()));
+            appendTextToTextField(String.valueOf((char)data.intValue()));
         }
     }
 
