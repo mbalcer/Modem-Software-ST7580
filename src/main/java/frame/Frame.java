@@ -26,29 +26,24 @@ public class Frame {
         correctFrame = false;
     }
 
-    public Frame(byte cc, byte... data) {
+    public Frame(int cc, int... data) {
         this();
         this.begin = STX;
         this.len = data.length;
-        this.commandCode = cc;
+        this.commandCode = (byte)cc;
         this.data = new Byte[data.length];
         for (int i = 0; i < data.length; i++) {
-            this.data[i] = data[i];
+            this.data[i] = (byte)data[i];
         }
 
         Integer fcs = this.len + this.commandCode.intValue();
 
-        for (Byte d:data) {
+        for (Integer d:data) {
             fcs += d.intValue();
         }
 
-        if (fcs > 0xff) {
-            checkSum[0] = Byte.valueOf((byte) 0xFF);
-            checkSum[1] = Byte.valueOf((byte) (fcs.byteValue() - 0xff));
-        } else {
-            checkSum[0] = Byte.valueOf(Byte.valueOf(fcs.byteValue()));
-            checkSum[1] = Byte.valueOf(Byte.valueOf((byte) 0x00));
-        }
+        checkSum[0] = Byte.valueOf((byte) (fcs & 0xff));
+        checkSum[1] = Byte.valueOf((byte) ((fcs & 0xff00) >> 8));
     }
 
     public void processFrame(Byte receivedByte) {
@@ -139,7 +134,7 @@ public class Frame {
         for (Byte d:data) {
             lenFrame += d.intValue();
         }
-        Integer lenFromCheckSum = checkSum[0].intValue() + checkSum[1].intValue();
+        Integer lenFromCheckSum = checkSum[1].intValue() << 8 | checkSum[1].intValue();
 
         if (lenFrame == lenFromCheckSum)
             correctFrame = true;
