@@ -136,7 +136,7 @@ public class Frame {
         }
         Integer lenFromCheckSum = checkSum[1].intValue() << 8 | checkSum[0].intValue();
 
-        if (lenFrame == lenFromCheckSum)
+        if (lenFrame.equals(lenFromCheckSum))
             correctFrame = true;
         else {
             correctFrame = false;

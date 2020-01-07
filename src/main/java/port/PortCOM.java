@@ -43,7 +43,7 @@ public class PortCOM {
                         e.printStackTrace();
                     }
 
-                    frame.processFrame((int)getByte[0]);
+                    frame.processFrame((int)getByte[0] & 0xff);
 
                     if (frame.isCorrectFrame()) {
                         if (frame.isSendAck()) {
