@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import port.DisplayData;
 import port.PortCOM;
 
@@ -96,6 +98,8 @@ public class MainController {
     private Modulation modulation;
     private int byteModulation;
 
+    private Logger log = LoggerFactory.getLogger(MainController.class);
+
     public void initialize() {
         initToggleGroup(groupDisplayReceivedData, rbReceiveHEX, rbReceiveASCII);
         initToggleGroup(groupSendData, rbSendASCII, rbSendHEX);
@@ -167,7 +171,7 @@ public class MainController {
 //        final byte[] resetCode = {0x02, 0x00, 0x3C, 0x3C, 0x00};
         Frame resetFrame = new Frame(0x3C);
         connectedPort.send(resetFrame.getBytes());
-        System.out.println("Reset...");
+        log.info("Reset...");
         rbDl.setSelected(true);
     }
 
@@ -177,16 +181,19 @@ public class MainController {
         if (sendData == DisplayData.ASCII) {
             connectedPort.send(makeFrameBeforeSend(message.getBytes()));
             info.setText("You have successfully sent the text in ASCII");
+            log.info("Wiadomość została wysłana poprawnie (ASCII)");
             info.setTextFill(Paint.valueOf("GREEN"));
         } else if (sendData == DisplayData.HEX) {
-            message = message.replaceAll("\\s+","");
+            message = message.replaceAll("\\s+", "");
             try {
                 byte[] bytes = DatatypeConverter.parseHexBinary(message);
                 connectedPort.send(makeFrameBeforeSend(bytes));
                 info.setText("You have successfully sent the text in HEX");
+                log.info("Wiadomość została wysłana poprawnie (HEX)");
                 info.setTextFill(Paint.valueOf("GREEN"));
             } catch (IllegalArgumentException e) {
                 info.setText("You are trying to send incorrect char in HEX");
+                log.error("Wiadomość nie została wysłana (HEX)");
                 info.setTextFill(Paint.valueOf("RED"));
             }
         }
@@ -200,24 +207,26 @@ public class MainController {
 
     private void checkOpenPort(PortCOM port) {
         if (port.getPort().isOpen()) {
-            info.setText("You are connected to the port " +port.getPort().getSystemPortName());
+            info.setText("You are connected to the port " + port.getPort().getSystemPortName());
             info.setTextFill(Paint.valueOf("GREEN"));
+            log.info("Połączyłeś się z portem " + port.getPort().getSystemPortName());
             disableButtons(false);
-        }
-        else {
+        } else {
             info.setText("Unable to connect to port " + port.getPort().getSystemPortName());
             info.setTextFill(Paint.valueOf("RED"));
+            log.error("Nie można się połączyć z portem " + port.getPort().getSystemPortName());
         }
     }
 
     private void checkClosePort(PortCOM port) {
         if (port.getPort().isOpen()) {
-            info.setText("Cannot disconnect from port " +port.getPort().getSystemPortName());
+            info.setText("Cannot disconnect from port " + port.getPort().getSystemPortName());
             info.setTextFill(Paint.valueOf("RED"));
-        }
-        else {
+            log.error("Nie można zamknąć portu " + port.getPort().getSystemPortName());
+        } else {
             info.setText("Disconnected from the port " + port.getPort().getSystemPortName());
             info.setTextFill(Paint.valueOf("GREEN"));
+            log.info("Poprawnie zamknięto port " + port.getPort().getSystemPortName());
             disableButtons(true);
         }
     }
@@ -250,6 +259,7 @@ public class MainController {
     @FXML
     public void refreshPort() {
         fillComboBoxPorts();
+        log.info("Lista portów została odświeżona");
     }
 
     @FXML
@@ -292,6 +302,7 @@ public class MainController {
         connectedPort.send(phyFrame.getBytes());
         info.setText("Changed mode on PHY");
         info.setTextFill(Paint.valueOf("GREEN"));
+        log.info("Zmieniono tryb na PHY");
     }
 
     @FXML
@@ -300,6 +311,7 @@ public class MainController {
         connectedPort.send(dlFrame.getBytes());
         info.setText("Changed mode on DL");
         info.setTextFill(Paint.valueOf("GREEN"));
+        log.info("Zmieniono tryb na DL");
     }
 
     @FXML
@@ -334,6 +346,7 @@ public class MainController {
         int fec = cbModulationCoded.isSelected() ? 1 : 0;
 
         byteModulation = 4 + (fec << 6) + (modulationValue << 4);
+        log.info("Ustawiono modulację na " + modulation.toString());
     }
 
     private byte[] makeFrameBeforeSend(byte[] data) {
@@ -342,7 +355,7 @@ public class MainController {
         int[] dataInt = new int[data.length + 1];
         dataInt[0] = byteModulation;
         for (int i = 1; i < dataInt.length; i++) {
-            dataInt[i] = data[i-1] & 0xff;
+            dataInt[i] = data[i - 1] & 0xff;
         }
 
         Frame frame = new Frame(modeValue, dataInt);

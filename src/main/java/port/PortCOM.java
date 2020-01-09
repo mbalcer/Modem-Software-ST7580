@@ -5,6 +5,8 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import frame.Frame;
 import javafx.scene.control.TextArea;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,8 @@ public class PortCOM {
     private Frame frame;
     private TextArea receivedText;
     private DisplayData displayReceivedData;
+
+    private Logger log = LoggerFactory.getLogger(PortCOM.class);
 
     public PortCOM(SerialPort port, TextArea receivedText) {
         this.port = port;
@@ -48,7 +52,7 @@ public class PortCOM {
                     if (frame.isCorrectFrame()) {
                         if (frame.isSendAck()) {
                             port.writeBytes(new byte[]{ACK}, 1);
-                            System.out.println("Wysłano ACK ");
+                            log.info("Wysłano ACK ");
                         }
 
                         frame.getFrame().stream()
