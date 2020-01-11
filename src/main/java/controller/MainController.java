@@ -105,6 +105,7 @@ public class MainController {
     private DisplayData sendData;
     private Modulation modulation;
     private int byteModulation;
+    private Mode mode;
 
     private Logger log = LoggerFactory.getLogger(MainController.class);
 
@@ -308,20 +309,23 @@ public class MainController {
 
     @FXML
     public void setPhy() {
-        Frame phyFrame = new Frame(0x08, 0x00, 0x10);
-        connectedPort.send(phyFrame.getBytes());
-        info.setText("Changed mode on PHY");
-        info.setTextFill(Paint.valueOf("GREEN"));
-        log.info("Zmieniono tryb na PHY");
+        mode = Mode.PHY;
+        setMode();
     }
 
     @FXML
     public void setDl() {
-        Frame dlFrame = new Frame(0x08, 0x00, 0x11);
-        connectedPort.send(dlFrame.getBytes());
-        info.setText("Changed mode on DL");
+        mode = Mode.DL;
+        setMode();
+    }
+
+    private void setMode() {
+        int modeByte = (mode.equals(Mode.PHY)) ? 0x10 : 0x11;
+        Frame modeFrame = new Frame(0x08, 0x00, modeByte);
+        connectedPort.send(modeFrame.getBytes());
+        info.setText("Changed mode on "+mode.toString());
         info.setTextFill(Paint.valueOf("GREEN"));
-        log.info("Zmieniono tryb na DL");
+        log.info("Zmieniono tryb na "+mode.toString());
     }
 
     @FXML
