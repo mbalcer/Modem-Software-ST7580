@@ -83,7 +83,10 @@ public class MainController {
     private Button btnResetModem;
 
     @FXML
-    private Button btnClear;
+    private Button btnLoadConf;
+
+    @FXML
+    private Button btnSaveConf;
 
     @FXML
     private TextField textToSend;
@@ -259,6 +262,8 @@ public class MainController {
         rbSendHEX.setDisable(bool);
         rbDl.setDisable(bool);
         rbPhy.setDisable(bool);
+        btnLoadConf.setDisable(bool);
+        btnSaveConf.setDisable(bool);
     }
 
     @FXML
