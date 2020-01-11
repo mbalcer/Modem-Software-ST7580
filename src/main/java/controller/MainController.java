@@ -1,18 +1,23 @@
 package controller;
 
 import com.fazecast.jSerialComm.SerialPort;
+import configuration.Configuration;
+import configuration.LoadConfiguration;
 import frame.Frame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import port.DisplayData;
 import port.PortCOM;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.File;
 import java.util.Arrays;
 
 public class MainController {
@@ -346,7 +351,7 @@ public class MainController {
         int fec = cbModulationCoded.isSelected() ? 1 : 0;
 
         byteModulation = 4 + (fec << 6) + (modulationValue << 4);
-        log.info("Ustawiono modulację na " + modulation.toString());
+        log.info("Ustawiono modulację na " + modulation.toString() + ((fec==1)?" coded":""));
     }
 
     private byte[] makeFrameBeforeSend(byte[] data) {
@@ -361,5 +366,29 @@ public class MainController {
         Frame frame = new Frame(modeValue, dataInt);
         return frame.getBytes();
     }
+
+    public void loadConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog(new Stage());
+        LoadConfiguration loadConfiguration = new LoadConfiguration(file);
+        Configuration config = loadConfiguration.getConfiguration();
+
+        switch (config.getMode()) {
+            case DL: setDl(); rbDl.setSelected(true); break;
+            case PHY: setPhy(); rbPhy.setSelected(true); break;
+        }
+        cbModulationCoded.setSelected(config.getCoded());
+        rb8PSK.setDisable(cbModulationCoded.isSelected());
+        switch (config.getModulation()) {
+            case BPSK: setBPSK(); rbBPSK.setSelected(true); break;
+            case QPSK: setQPSK(); rbQPSK.setSelected(true); break;
+            case PSK8: set8PSK(); rb8PSK.setSelected(true); break;
+        }
+    }
+
+    public void saveConfig() {
+    }
+
 
 }
