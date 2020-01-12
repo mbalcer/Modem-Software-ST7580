@@ -3,6 +3,7 @@ package controller;
 import com.fazecast.jSerialComm.SerialPort;
 import configuration.Configuration;
 import configuration.LoadConfiguration;
+import configuration.SaveConfiguration;
 import frame.Frame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -114,6 +115,7 @@ public class MainController {
         initToggleGroup(groupSendData, rbSendASCII, rbSendHEX);
         initToggleGroup(groupMode, rbDl, rbPhy);
         initToggleGroup(groupModulation, rbBPSK, rbQPSK, rb8PSK);
+        mode = Mode.DL;
         sendData = DisplayData.ASCII;
         modulation = Modulation.BPSK;
         byteModulation = 4;
@@ -182,6 +184,7 @@ public class MainController {
         connectedPort.send(resetFrame.getBytes());
         log.info("Reset...");
         rbDl.setSelected(true);
+        mode = Mode.DL;
     }
 
     @FXML
@@ -397,6 +400,14 @@ public class MainController {
     }
 
     public void saveConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("properties", "*.properties"));
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            Configuration config = new Configuration(mode, modulation, false);
+            SaveConfiguration saveConfiguration = new SaveConfiguration(file);
+            saveConfiguration.saveConfiguration(config);
+        }
     }
 
 
