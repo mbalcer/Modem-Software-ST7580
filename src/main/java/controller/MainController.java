@@ -209,6 +209,8 @@ public class MainController {
                 info.setTextFill(Paint.valueOf("RED"));
             }
         }
+
+
     }
 
     @FXML
@@ -379,29 +381,31 @@ public class MainController {
         return frame.getBytes();
     }
 
+    @FXML
     public void loadConfig() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
+        FileChooser fileChooser = initFileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
-        LoadConfiguration loadConfiguration = new LoadConfiguration(file);
-        Configuration config = loadConfiguration.getConfiguration();
+        if(file != null) {
+            LoadConfiguration loadConfiguration = new LoadConfiguration(file);
+            Configuration config = loadConfiguration.getConfiguration();
 
-        switch (config.getMode()) {
-            case DL: setDl(); rbDl.setSelected(true); break;
-            case PHY: setPhy(); rbPhy.setSelected(true); break;
-        }
-        cbModulationCoded.setSelected(config.getCoded());
-        rb8PSK.setDisable(cbModulationCoded.isSelected());
-        switch (config.getModulation()) {
-            case BPSK: setBPSK(); rbBPSK.setSelected(true); break;
-            case QPSK: setQPSK(); rbQPSK.setSelected(true); break;
-            case PSK8: set8PSK(); rb8PSK.setSelected(true); break;
+            switch (config.getMode()) {
+                case DL: setDl(); rbDl.setSelected(true); break;
+                case PHY: setPhy(); rbPhy.setSelected(true); break;
+            }
+            cbModulationCoded.setSelected(config.getCoded());
+            rb8PSK.setDisable(cbModulationCoded.isSelected());
+            switch (config.getModulation()) {
+                case BPSK: setBPSK(); rbBPSK.setSelected(true); break;
+                case QPSK: setQPSK(); rbQPSK.setSelected(true); break;
+                case PSK8: set8PSK(); rb8PSK.setSelected(true); break;
+            }
         }
     }
 
+    @FXML
     public void saveConfig() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("properties", "*.properties"));
+        FileChooser fileChooser = initFileChooser();
         File file = fileChooser.showSaveDialog(new Stage());
         if (file != null) {
             Configuration config = new Configuration(mode, modulation, false);
@@ -410,5 +414,10 @@ public class MainController {
         }
     }
 
-
+    private FileChooser initFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("."));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("properties", "*.properties"));
+        return fileChooser;
+    }
 }
