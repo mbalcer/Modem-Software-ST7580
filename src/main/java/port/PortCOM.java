@@ -20,6 +20,9 @@ public class PortCOM {
     private TextArea receivedText;
     private DisplayData displayReceivedData;
 
+    private StringBuilder receivedHex;
+    private StringBuilder receivedAscii;
+
     private Logger log = LoggerFactory.getLogger(PortCOM.class);
 
     public PortCOM(SerialPort port, TextArea receivedText) {
@@ -27,6 +30,8 @@ public class PortCOM {
         this.displayReceivedData = DisplayData.HEX;
         this.frame = new Frame();
         this.receivedText = receivedText;
+        this.receivedHex = new StringBuilder();
+        this.receivedAscii = new StringBuilder();
     }
 
     public void activeListener() {
@@ -58,7 +63,7 @@ public class PortCOM {
                         frame.getFrame().stream()
                                 .forEach(data -> displayData(data));
 
-                        appendTextToTextField("\n");
+                        appendEndOfLine();
                     }
                     else if(frame.getStatus()!=null) {
                         displayData(0x3F);
@@ -67,7 +72,7 @@ public class PortCOM {
                         appendTextToTextField("\n");
                     } else if (frame.getReceiveAck()!=null) {
                         displayData(frame.getReceiveAck());
-                        appendTextToTextField("\n");
+                        appendEndOfLine();
                         frame.setReceiveAck(null);
                     }
                 }
@@ -106,7 +111,15 @@ public class PortCOM {
         javafx.application.Platform.runLater(() -> receivedText.appendText(text));
     }
 
+    private void appendEndOfLine() {
+        appendTextToTextField("\n");
+        receivedAscii.append("\n");
+        receivedHex.append("\n");
+    }
+
     private void displayData(Integer data) {
+        receivedHex.append(String.format("0x%02x", data) + " ");
+        receivedAscii.append((char)data.intValue());
         if (displayReceivedData == DisplayData.HEX) {
             appendTextToTextField(String.format("0x%02x", data) + " ");
         } else {
@@ -127,5 +140,13 @@ public class PortCOM {
         port.setNumDataBits(dataBits);
         port.setNumStopBits(stopBits);
         port.setParity(parity);
+    }
+
+    public String getReceivedHex() {
+        return receivedHex.toString();
+    }
+
+    public String getReceivedAscii() {
+        return receivedAscii.toString();
     }
 }

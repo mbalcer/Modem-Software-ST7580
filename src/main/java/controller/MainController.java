@@ -209,8 +209,6 @@ public class MainController {
                 info.setTextFill(Paint.valueOf("RED"));
             }
         }
-
-
     }
 
     @FXML
@@ -288,12 +286,14 @@ public class MainController {
     public void setReceiveInAscii() {
         connectedPort.setDisplayReceivedData(DisplayData.ASCII);
         resetReceiveData();
+        receivedText.setText(connectedPort.getReceivedAscii());
     }
 
     @FXML
     public void setReceiveInHex() {
         connectedPort.setDisplayReceivedData(DisplayData.HEX);
         resetReceiveData();
+        receivedText.setText(connectedPort.getReceivedHex());
     }
 
     @FXML
