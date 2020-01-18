@@ -163,4 +163,8 @@ public class Frame {
     public Integer getReceiveAck() {
         return receiveAck;
     }
+
+    public void setReceiveAck(Integer receiveAck) {
+        this.receiveAck = receiveAck;
+    }
 }

@@ -68,6 +68,7 @@ public class PortCOM {
                     } else if (frame.getReceiveAck()!=null) {
                         displayData(frame.getReceiveAck());
                         appendTextToTextField("\n");
+                        frame.setReceiveAck(null);
                     }
                 }
             }
