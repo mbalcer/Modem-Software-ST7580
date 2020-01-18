@@ -280,6 +280,7 @@ public class MainController {
     public void clear() {
         textToSend.clear();
         receivedText.clear();
+        connectedPort.clearReceived();
     }
 
     @FXML

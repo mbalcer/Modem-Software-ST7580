@@ -149,4 +149,9 @@ public class PortCOM {
     public String getReceivedAscii() {
         return receivedAscii.toString();
     }
+
+    public void clearReceived() {
+        receivedHex.delete(0, receivedHex.length());
+        receivedAscii.delete(0, receivedAscii.length());
+    }
 }
